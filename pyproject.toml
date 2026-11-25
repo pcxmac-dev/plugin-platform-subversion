@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "plugin-platform-subversion"
+version = "0.1.0"  # the plugin's own release (CHANGELOG.md); the app shows it on the Plugins view
+description = "Subversion for Liminal: the versions of svn, svnadmin and svnserve and the working copies and repositories under the folders you name, each read from its own files, and svnserve run in a container through the container plugin you pick."
+readme = "README.md"
+requires-python = ">=3.10"
+# the library it plugs into (the machine kind: liminal_libs.machines, plugin API 2.2); 1.94.0: ContainedService, the
+# base its server is built on (in containers alone, through a container plugin's plans)
+# 1.95.0: a secret the plugin declares among its own keys is handed over (SUBVERSION_ADMIN_PASSWORD; 1.93.0 and
+# 1.94.0 refused it)
+dependencies = ["liminal-libs>=1.95.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.entry-points."liminal.providers"]
+subversion = "plugin_platform_subversion"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
