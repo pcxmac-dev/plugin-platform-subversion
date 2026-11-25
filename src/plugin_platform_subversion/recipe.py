@@ -13,9 +13,11 @@ never into the volume nor onto a command line. A first repository, `main`, is ma
 create), and more are made the same way, by the repository's own tools. Installed on this PC alone (127.0.0.1:3690);
 Expose… opens it to your network.
 
-The pin: read from Docker Hub on 2026-11-25 (its manifest list alone, no image pulled). That the image runs its
-command with /bin/sh, svnadmin and svnserve on PATH, as root, is its Dockerfile's word (github.com/garethflowers/
-docker-svn-server), not read again for this release: check it against the image before your first Install…."""
+The pin: read from Docker Hub on 2026-11-25 (its manifest list, then its amd64 config blob; no layer, no image
+pulled). The config says: no Entrypoint, Cmd /usr/bin/svnserve --daemon --foreground --root /var/opt/svn, no User (root),
+port 3690/tcp, Volume /var/opt/svn, WorkingDir /var/opt/svn: so this recipe's command replaces the whole of what runs,
+as root, in the volume the image declares. That /bin/sh and svnadmin are in it is its Alpine base's and its Dockerfile's
+word (a layer's, not read)."""
 from __future__ import annotations
 
 from collections.abc import Mapping

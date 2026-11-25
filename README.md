@@ -26,9 +26,13 @@ Subversion for Liminal, one of the platform's Source Control plugins (Monday lis
 ## Its pin
 
 `docker.io/garethflowers/svn-server:1.8.1` at `sha256:26688af4…20095658`, read from Docker Hub on 2026-11-25 (its
-manifest list alone; no image pulled), 7.9 MB for amd64. That the image runs its command with /bin/sh, svnadmin and
-svnserve on PATH, as root, is its Dockerfile's word, not read again for this release: check it before your first
-Install…. An unread pin (`UNREAD`) is refused before any plan.
+manifest list, then its amd64 config blob; no layer, no image pulled), 7.9 MB for amd64. An unread pin (`UNREAD`) is
+refused before any plan.
+
+What its config blob says: no Entrypoint; Cmd `/usr/bin/svnserve --daemon --foreground --root /var/opt/svn`; no User
+(root); ExposedPorts `3690/tcp`; Volumes `/var/opt/svn`; WorkingDir `/var/opt/svn`. The recipe matches it: its
+command (`/bin/sh -c …`) replaces the image's Cmd whole, as no entrypoint wraps it, and runs as root in the declared
+volume. That `/bin/sh` and `svnadmin` are in the image is its Alpine base's word (a layer's, not read).
 
 ## Tests
 

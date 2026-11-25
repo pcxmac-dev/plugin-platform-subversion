@@ -76,6 +76,13 @@ def test_its_install_lets_no_one_in_anonymously_and_hands_the_password_as_a_secr
     assert any("svn checkout svn://127.0.0.1:3690/main" in line for line in end["lines"])
 
 
+def test_its_command_and_paths_are_the_ones_its_image_says():
+    # its amd64 config blob, read 2026-11-25: no Entrypoint, Cmd svnserve, Volume /var/opt/svn, 3690/tcp
+    part = recipe.spec("linux", "svnserve", {}, PASSWORD, pins()).parts[0]
+    assert part.command[:2] == ("/bin/sh", "-c") and "--root /var/opt/svn" in part.command[2]
+    assert [v.path for v in part.volumes] == ["/var/opt/svn"] and [p.container for p in part.ports] == [3690]
+
+
 def test_the_start_script_writes_the_password_outside_the_volume_and_forgets_it():
     s = recipe.START
     assert s.index("umask 077") < s.index("> /tmp/liminal/passwd") < s.index("unset SVN_ADMIN_PASSWORD") < s.index("exec svnserve")
